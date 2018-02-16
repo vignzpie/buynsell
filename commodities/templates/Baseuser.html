@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html dir="{{dir}}">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    	<link href="{{STATIC_URL}}css/metro-bootstrap.css" rel="stylesheet">
+    	<link href="{{STATIC_URL}}css/metro-bootstrap-responsive.css" rel="stylesheet">
+    
+    <!-- <link href="{{STATIC_URL}}css/metro-bootstrap.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/metro-bootstrap-responsive.css" rel="stylesheet"> -->
+    <link href="{{STATIC_URL}}css/iconFont.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/docs.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}js/prettify/prettify.css" rel="stylesheet">
+	<link rel="shortcut icon" type="image/x-icon" href="{{STATIC_URL}}images/favicon.ico" />
+    
+    <script src="{{STATIC_URL}}js/jquery/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery/jquery.widget.min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery/jquery.mousewheel.js"></script>
+    <script src="{{STATIC_URL}}js/prettify/prettify.js"></script>
+    <script src="{{STATIC_URL}}js/jquery.dataTables.js"></script>
+
+	<script>
+	$(document).ready( function () {
+		(function ($) {
+			  $.each(['show'], function (i, ev) {
+			    var el = $.fn[ev];
+			    $.fn[ev] = function () {
+			      this.trigger(ev);
+			      return el.apply(this, arguments);
+			    };
+			  });
+			})(jQuery);
+		
+		$('#ajaxReqFailDiv').on('show', function() {
+		      showAjaxErr();
+		});
+		
+		var NotifyStyle={
+			"error":{
+				"bg":"#ce352c",
+				"color":"white",
+			},
+			"info":{
+				"bg":"#00aff0",
+				"color":"white",
+			},
+			"success":{
+				"bg":"#60a917",
+				"color":"white",
+			},
+			"warning":{
+				"bg":"#f0a30a",
+				"color":"white",
+			}
+		
+		};
+		
+		
+		{% if messages %}
+		    {% regroup messages by tags as messages %}
+		    {% for tags in messages %}
+		    	{% for message in tags.list %}
+				    console.log(NotifyStyle["{{tags.grouper}}"]["bg"]);
+				    console.log(NotifyStyle["{{tags.grouper}}"]["color"])
+		            $.Notify({
+		            	style: {background: NotifyStyle["{{tags.grouper}}"]["bg"], color: NotifyStyle["{{tags.grouper}}"]["color"]},
+		            	caption: "{{tags.grouper|capfirst}}",
+		            	content: "{{ message|capfirst }}",
+		            	timeout:5000
+		            });
+				{% endfor %}
+		    {% endfor %}
+		{% endif %}
+		
+});
+	function showAjaxErr(){
+        $.Notify({
+        	style: {background:"red", color: "white"},
+        	caption: "Error",
+        	content: '\
+    			Sorry! We encountered an error while processing you request. \
+    			<a class="fg-white fg-hover-darkRed" style="text-decoration: underline;" href="javascript:window.location.reload()">Click here to Reload</a>\
+    			',
+        	timeout:5000
+        });
+	};
+		function getMessages() {
+		if (reloadMsgCount > 2) {
+			return;
+		} else {
+			$.ajax({
+				url : "#",
+				type : "GET",
+				dataType : "json",
+				data : {
+					csrfmiddlewaretoken : '{{ csrf_token }}'
+				},
+				success : function(data) {
+					if (data.length) {
+						window.location.reload();
+
+					}
+				},
+				error : function(xhr, errmsg, err) {
+				}
+			});
+			reloadMsgCount++;
+		}
+	}
+
+	function aboutWindow(){
+        $.Dialog({
+            overlay: true,
+            shadow: true,
+			flat: true,
+            draggable: true,                                
+            title: 'Flat window',
+            content: '',
+            width: '300px',
+            //height: '250px',
+            padding: 10,
+            onShow: function(_dialog){
+                var content = '<h5></h5>' +
+                '<div>{{version}}</div>';
+				
+				
+                $.Dialog.title('<b></b>');
+                $.Dialog.content(content);
+            }
+        });
+   };
+   
+   function userDetailsWindow(){
+        $.Dialog({
+            overlay: true,
+            shadow: true,
+            flat: true,
+            draggable: true,                                
+            title: 'Flat window',
+            content: '',
+            width: '300px',
+            height: '185px',
+            padding: 10,
+            onShow: function(_dialog){
+                var content = '<h5></h5>' +
+                '<div>{{ request.session.tenant_id }}</div>'+
+                '<h5></h5>' +
+                '<div>{{ request.session.user_role }}</div>';
+
+                $.Dialog.title("<b></b>");
+                $.Dialog.content(content);
+            }
+        });
+   };
+
+function licDetailsWindow(){
+	$.ajax({
+			url : "{% url 'home' %}",
+			type : "GET",
+			dataType : "json",
+			data : {				
+			},
+			success : function(data) {
+				console.log(data['data']);
+				$.Dialog({
+			            overlay: true,
+			            shadow: true,
+			            flat: true,
+			            draggable: true,                                
+			            title: 'Flat window',
+			            content: '',
+			            width: '333px',
+			            height: '185px',
+			            padding: 10,
+			            onShow: function(_dialog){
+			                var content = '';
+			                content += '';
+			
+			                $.Dialog.title("<b></b>");
+			                $.Dialog.content(content);
+			            }
+			        });
+			},
+			error : function(xhr, errmsg, err) {
+				console.log('Error in ajax request');
+			}
+		});
+        
+   };
+   	</script>
+    <style type="text/css">
+    	.errorlist li{
+    		color:red;
+    	}
+    	
+    	/*This div is displayed when ajax request fails*/
+    </style>
+    {%block extra_head%} 
+  	{%endblock%} 
+
+    <!-- Metro UI CSS JavaScript plugins -->
+    <script src="{{STATIC_URL}}js/load-metro.js"></script>
+	<script src="{{STATIC_URL}}js/metro/metro-dropdown.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/metro.min.js" ></script>
+
+
+    <title>TxSmartQ | {%block title%}{%endblock%} </title>
+</head>
+<body class="metro"  > <!-- style="background-image: url(/static/images/bg.png);" -->
+    <header>
+    	<div class="navigation-bar fixed-top bg-dark">
+		</div>
+    </header>
+
+	{%block container_wrap %}
+	{% block message_container %}
+    <div class="container" > 
+    	<div id="ajaxReqFailDiv" style="display: none;">
+    	</div>   	
+	{%block body_container%} 
+  	{%endblock%} 
+    </div> <!-- End of container -->
+    {%endblock%}
+    {%endblock%}
+    {%block footer %} 
+    <div class="text-center text-muted page-footer-content fixed-bottom">
+
+
+    </div>
+    {%endblock%} 
+</body>
+</html>

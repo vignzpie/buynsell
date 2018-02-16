@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{%block title%} {{ action }} {%endblock%}
+{%block extra_head%}
+<script>
+
+
+</script>
+
+
+<style>
+	.selectedLi{
+		background-color: #E4E4E5;
+	}
+
+	.listHeader{
+		display: inline-block;
+		font-weight: bold;
+		text-align: center;
+	}
+	.listRows{
+		display: inline-block;
+		text-align: center;		
+	}
+	.errmsg
+	{
+	color: red;
+	}
+	.hoverHashout:hover {
+    opacity: 0.6;
+    filter: alpha(opacity=40); /* For IE8 and earlier */
+	}
+	td{
+     white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+     white-space: -pre-wrap;      /* Opera 4-6 */
+     white-space: -o-pre-wrap;    /* Opera 7 */
+     white-space: pre-wrap;       /* css-3 */
+     word-wrap: break-word;       /* Internet Explorer 5.5+ */
+     word-break: break-all;
+     white-space: normal;
+	}
+
+
+	/* DivTable.com */
+.divTable{
+	display: table;
+	width: 100%;
+}
+.divTableRow {
+	display: table-row;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+}
+.divTableCell, .divTableHead {
+	border: 1px solid #999999;
+	display: table-cell;
+	padding: 3px 10px;
+}
+.divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+.divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableBody {
+	display: table-row-group;
+}
+
+
+
+
+
+
+
+</style>
+{%endblock%} 
+{% block body_container %}
+
+
+
+<div class="content-div">
+    <div class="grid">
+		<div class="row">
+		<label><b>q id<span style="color: red;">*</span></b></label>
+		{{formsList.item.item_id.errors}}
+		<div class="input-control text" style="max-width:550px;" data-role="input-control">
+			{{formsList.item.item_id}} 
+			{{formsList.item.item_type}} 
+			{{formsList.item.item_status}} 
+		</div>
+
+
+			{{baseItemForm.item_id}}
+			<label><b>"Status"<span style="color: red;">*</span></b></label>
+			<div class="input-control select" style="max-width:550px;" data-role="input-control">
+				{{formsList.property.item_id}} 
+				{{formsList.property.posted_by}} 
+				{{formsList.property.posted_datestamp}} 
+				{{formsList.property.posted_timestamp}} 
+				{{formsList.property.modified_by}} 
+				{{formsList.property.modified_datestamp}} 
+				{{formsList.property.modified_timestamp}} 
+				{{formsList.property.title}} 
+				{{formsList.property.price}} 
+				{{formsList.property.category}} 
+				{{formsList.property.address}} 
+				{{formsList.property.area}} 
+				{{formsList.property.city}} 
+				{{formsList.property.postal_code}} 
+				{{formsList.property.district}} 
+				{{formsList.property.state}} 
+				{{formsList.property.country}} 
+				{{formsList.property.latitude}} 
+				{{formsList.property.longitude}} 
+				{{formsList.property.description}} 
+				{{formsList.property.tags}} 
+				{{formsList.property.no_rooms}} 
+				{{formsList.property.no_bedrooms}} 
+				{{formsList.property.area_living}} 
+				{{formsList.property.built_on}} 
+				{{formsList.property.house_style}} 
+				{{formsList.property.roof}} 
+				{{formsList.property.no_floors}} 
+				{{formsList.property.flooring}} 
+				{{formsList.property.land_size}} 
+				{{formsList.property.east_side_land}} 
+				{{formsList.property.west_side_land}} 
+				{{formsList.property.south_side_land}} 
+				{{formsList.property.north_side_land}} 
+				{{formsList.property.selling_type}} 
+				{{formsList.property.future_improvements}} 
+				{{formsList.property.future_development_area}} 
+				{{formsList.property.amenities}} 
+				{{formsList.property.nearby}} 
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}
