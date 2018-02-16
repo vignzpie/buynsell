@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>	
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    
+    <link href="{{STATIC_URL}}css/metro-bootstrap.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/metro-bootstrap-responsive.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/iconFont.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}css/docs.css" rel="stylesheet">
+    <link href="{{STATIC_URL}}js/prettify/prettify.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/jquery.datetimepicker.css"/>
+	<link rel="shortcut icon" type="image/x-icon" href="{{STATIC_URL}}images/favicon.png" />
+    
+    <script src="{{STATIC_URL}}js/jquery/jquery.min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery/jquery.widget.min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery/jquery.mousewheel.js"></script>
+    <script src="{{STATIC_URL}}js/prettify/prettify.js"></script>
+    <script src="{{STATIC_URL}}js/jquery.dataTables.js"></script>
+	<script src="{{STATIC_URL}}js/jquery/build/jquery.datetimepicker.full.js"></script>
+    
+    {%block extra_head%}     
+  	{%endblock%} 
+	<script src="{{STATIC_URL}}js/metro/metro-dropdown.js"></script>
+	<script src="{{STATIC_URL}}js/metro.min.js" ></script>
+	
+	<script>
+		$(document).ready( function (){
+			   $('.paginated-table').DataTable({
+			   	"iDisplayLength": 25
+			   });
+			   
+			   // $( "#messages" ).show( "slow");
+			   // setTimeout(function(){ $( "#messages" ).hide( "slow");}, (60 *1000));			   
+			
+			(function ($) {
+			  $.each(['show'], function (i, ev) {
+			    var el = $.fn[ev];
+			    $.fn[ev] = function () {
+			      this.trigger(ev);
+			      return el.apply(this, arguments);
+			    };
+			  });
+			})(jQuery);
+		
+		$('#ajaxReqFailDiv').on('show', function() {
+			 alert("show function");
+		      showAjaxErr();
+		});
+		
+		var NotifyStyle={
+			"error":{
+				"bg":"red",
+				"color":"white",
+			},
+			"info":{
+				"bg":"blue",
+				"color":"white",
+			},
+			"success":{
+				"bg":"#4CBE83",
+				"color":"white",
+			},
+			"warning":{
+				"bg":"#FEB743",
+				"color":"white",
+			}
+		
+		};
+		
+		{% if messages %}
+		    {% regroup messages by tags as messages %}
+		    {% for tags in messages %}
+		    	{% for message in tags.list %}
+				    console.log(NotifyStyle["{{tags.grouper}}"]["bg"]);
+				    console.log(NotifyStyle["{{tags.grouper}}"]["color"]);
+		            $.Notify({
+		            	style: {background: NotifyStyle["{{tags.grouper}}"]["bg"], color: NotifyStyle["{{tags.grouper}}"]["color"]},
+		            	caption: "{{tags.grouper|capfirst}}",
+		            	content: "{{ message|capfirst }}",
+		            	timeout:10000
+		            });
+				{% endfor %}
+		    {% endfor %}
+		{% endif %}
+});
+
+	function showAjaxErr(){
+        $.Notify({
+        	style: {background:"red", color: "white"},
+        	caption: "Error",
+        	content: 'Sorry! We encountered an error while processing you request. \
+    			<a class="fg-white fg-hover-darkRed" style="text-decoration: underline;" href="javascript:window.location.reload()">Click here to Reload</a>',
+        	timeout:5000
+        });
+	};
+
+
+		function aboutWindow(){
+        $.Dialog({
+            overlay: true,
+            shadow: true,
+			flat: true,
+            draggable: true,                                
+            title: 'Flat window',
+            content: '',
+            width: '300px',
+            //height: '250px',
+            padding: 10,
+            onShow: function(_dialog){
+                var content = '<h5>TxDialer</h5>' +
+                '<div>Version {{version}}</div>';
+				
+				content = content + '<br><h5><small>Powered by</small> <a target=\'_blank\' href="http://www.ilinknet.com/web/products/txcontact">TxContact</a><br /><small>Design by <a href="http://www.ilinknet.com" title="Interlink Network Systems" target="_blank"> Interlink Network Systems</a></small></h5>';
+				
+                $.Dialog.title('<b>About&nbsp<img alt="favicon.ico" style="width: 24px;height: 21px;margin-bottom: 5px;" src="data:image/jpeg;base64,AAABAAEAHhcAAAEAIABMCwAAFgAAACgAAAAeAAAALgAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkZF/Dp2Xly+tpqZUuLWzbMPAwG/HxMRc0NDMN+Xl5RT///8EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf39/ApWPjymrqaZuxMPBq9PR0cjd29vB5OPjrujn56Lr6emb7Ovrmu/u7pfv7e2E8fHxTfDw8BIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACOjo4Zop6edMPBwcrZ2NbL7uzsh/T09Ef29vYe6+vrDeLi4gni4uIJ////Dd/Z2Snc2dlm4eDepefm5qXy8vJS////BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJSUjzCuq6mkzszL5Ozr64309PQvv7+/BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoKCgG8fFxXjY1tbJ8PDwfe/v7xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlpGRMa6sq7HT0dDb8vLyZ+Xl5QoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH9/fwSwrape0M7O0e/v74fs7OwOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTk4kapqOgpdDNzeT09PRjv7+/BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/f38CpaOhas/MzODz8fFv////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKqqqgOalpR1xcPC7/Hv74Ha2toHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmYiID7CurJvb2dnR8PDwNQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJOTjCasqajL3dzcxtjT0zWNjY0SbW1tDjMzMwUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHQokUL055GHcmPNTC0exg+qG0PQZl8UnvAtqzn5uTgfv///wMAAAAAAAAAAAAAAAAAAAAAHx8PEIeDfXzCwL/15+bn5N3b3b3c3Ny+0tLSssPBwZGfn59gXV1dKQAAAAMAAAAAAAAAAP9/AALyzHIU88pwRO/IbnbpwWmn4bdeztKlSeXBjyvtt3sW76xqBuyfaiT8ondCz4hdIlJVVQADAAAAAAAAAAAMDAAVX1pVk46Lh/HV1NP+8vHx8Pv7++j9/f3k/f395vb29uzV1NXvmJeYzlpaWoFzYkUs8sxyPPTQdn310Ha79NB16/LPdfvvy3T/58Bs/9isV/7MmTv3x40o58KDF9i1fCXoqXc3/pxqKdmqey5d//8AAQAAAABEOy5SbGlo4aGfnvbh4N/Y8PDwWv///zX5+fkv////Mvf380Lb2NFksaaSpJ+KYejMq2HY8Mtx5fXRd/z20nv/9tOA/vXThP3yzoH06sV40uG4ZpzbrlNl365MOdanSSaqnYeIzcS57da9mqzQs4Cb1KpjEgAAAABwUR5bbVg9tZ6Zlc7h4ODG39/fGDMzAAVxRg4Smm8lMLSJNGbFmkSl1KpS3N+3Xvzqw2z/8c15//bUhP721or75smI+uTJjMLqzo5v78+UMO/frxD//9oH////Buvr6w2gnpyCz83N8cTExL2+u7e54eHhGgAAAACcbxo5fU0MzoNcLfmog1fjl2QVjJxoE5OpeiG5uoww38mcPffSp03+27Fc/+S8a//syHn78tCE5ffViq3mzZGKsKqZt6inp9vCwsbG6ejpsvv7+6L///+Y////mvf396u5t7bb09LR/sjIyfW9vb+J39/fCAAAAAB/PwAEkFcHY5hfENanZw3+sG8F+7h8FP3BjCj+y5w//dOnUPvbsV/z4rls3efCdrHtyn518s+FO//XiQ3/AAAB4ODgGcjIyF7W1tei7u7u1Pz8/Ov////y////8/Pz8/K4trX+3t3d5tzc3Hz09PQZAAAAAAAAAAAAAAAAf38AAqGKZG29onry0KNWxseNJKDPmzqi16hTk9ywX3XiuGZQ4r9uLO7Mdw8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///8K9/f3Ivr6+j3///9O////UsXFw466uLfv6urqlOXl5QoAAAAAAAAAAAAAAAAAAAAAAAAAAJeRkSq5uLfO6efjpebOthXakUgHzJkzBf//AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAm42NEqGenqHS0NDk9PT0SQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH9/fwShn5140c/P4vPz81sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/f38Cl5SSbMG/vuzt6+uP5+fnCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACTk5Mauri3o93b28T28vI7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFVVVQOWlpNau7m32+Lg4LL48vIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAk5ONLcfExKnh4OC29/PzQv///wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnImJDZ2amGvAvr3Z4N7dtvb29jkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJOTkybKx8eS397dvPPx8W7t7e0d////AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAImJiQ2dmZlEs7KwnMzJyOHo5uac9PT0MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACLi4sLv7+8VN3b257p5uak8fHxc+vr60PQ0NAswLq6JbexsSu3tLREure3b8PCwKjPzs3T4d/fs/Tx8WD///8QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKOjow7TztM66+jrZu/u74fq6emk5uXltOTi4r7j4uLC5eTkrevr64Hx8fFL8vLyFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN/f3wjt7e0d8/PzLvT09DLy8vIq8vLyFP///wIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD////8/8Af/P8f5/z8f/v8+f/8/PP//vzz//585///fOB/wDyADgAcj8AHDI+APwyAAAAMwA/APOD//jzn//589//+fPP//Pz5//n8/P/j/P8/j/z/4D/8/////A==" /></b>');
+                $.Dialog.content(content);
+            }
+        });
+   };	
+	</script>
+	
+    <title>BuySell | {%block title%} Home {%endblock%} </title>    	
+  </head>
+  
+  
+  <body class="metro"  >
+    
+    <header class="" >
+    	<div class="navigation-bar fixed-top bg-red">
+			<div class="navigation-bar-content container bg-red">
+				
+			        <a href="{% url 'home' %}" style="font-weight:bolder;" class="element"><span class="icon-cart"> </span> BuySell</a>			
+			        <span class="element-divider"> </span>
+			       
+			        <a class="pull-menu bg-red" href="#"> </a>
+			        <ul class="element-menu bg-red">
+                        <li>
+                            <a class="dropdown-toggle" href="#">Properties</a>
+                            <ul class="dropdown-menu bg-red fg-white" data-role="dropdown">  
+                                <li><a href="#">Buy</a></li>
+                                <li><a href="#">Sell</a></li> 								                               
+								<li ><a href="#">Rent</a></li> 
+                            </ul>
+                        </li>                        
+                      <li>
+                            <a class="dropdown-toggle" href="#">Job</a>
+                            <ul class="dropdown-menu bg-red fg-white" data-role="dropdown">  
+                                <li><a href="#">Post</a></li>
+                                <li><a href="#">Apply</a></li> 						
+                            </ul>
+                        </li>   
+                        <li>
+                            <a class="dropdown-toggle" href="#">Others</a>
+                            <ul class="dropdown-menu bg-red fg-white" data-role="dropdown">  
+                                <li><a href="#">A</a></li>
+                                <li><a href="#">B</a></li>
+                                <li><a href="#">C</a></li>
+                            </ul>
+                        </li>                            
+                    </ul>
+             	
+                    
+			        <span class="element-divider"> </span>
+
+					<div class="element-menu place-right ">
+						
+					
+						
+						<div class="element">
+							Hi 
+							{% if request.session.username %}
+				            <a class="dropdown-toggle" href="#">
+				               {{ request.session.username }}&nbsp;
+				            </a>
+				            <ul class="dropdown-menu place-right" data-role="dropdown">				            	
+				                <li class="text-left"><a href="#" target="_blank"><span class="icon-user"></span>&nbsp;&nbsp;Agent</a></li>
+				            	{% if request.session.username %}					            	
+				            		<li class="divider"></li>
+				            		<li class="text-left"><a href="#"><span class="icon-switch"></span>&nbsp;&nbsp;Logout</a></li>
+				            	{% endif %}
+				            </ul>
+				            {% else %}
+							User
+							{% endif %}			          
+				        </div>
+						
+						<span class="element-divider"> </span>
+						<span class="element-divider"> </span>			        
+					</div>	
+					 		        			        
+			</div>
+		</div>
+    </header>
+
+	{%block container_wrap %}
+    <div class="container" > 
+    	<div id="ajaxReqFailDiv" class="text-center fg-white ajaxRequestFail" style="display: none;"><span>Sorry! We encountered an error while processing you request. <a class="fg-white fg-hover-darkRed" style="text-decoration: underline;" href="javascript:window.location.reload()">Click here to Reload</a></span></div>   	
+    	<div id="ajaxReqWarningDiv" class="text-center fg-white ajaxRequestFail" style="display: none;"><span><a class="fg-white fg-hover-orange" style="text-decoration: underline;" href="javascript:window.location.reload()">Click here to Reload</a></span></div>   	
+
+    	{% if messages %}
+		    {% regroup messages by tags as messages %}
+		    <div id="messages" style="display: none;">
+		    {% for tags in messages %}
+		    {% if tags.grouper == 'error' %}
+		        <div style="background-color: rgba(240, 68, 68, 0.85);padding: 0px 1px 0px 12px; margin-top: 2px; border-bottom: 3px solid #D72020;">
+		            {% for message in tags.list %}
+		                <p class="fg-white" style="height: 11px;">{{ message|capfirst }}</p>
+		            {% endfor %}
+		        </div>
+		    {% else %}
+				    {% if tags.grouper == 'info' %}
+				        <div style="background-color: rgba(41, 172, 234, 0.85);padding: 0px 1px 0px 12px; margin-top: 2px; border-bottom: 3px solid #1299B0;">
+				            {% for message in tags.list %}
+				                <p class="fg-white" style="height: 11px;">{{ message|capfirst }}</p>
+				            {% endfor %}
+				        </div>
+				    {% else %}
+				    	{% if tags.grouper == 'success' %}
+					        <div style="background-color: #4CBE83;padding: 0px 1px 0px 12px; margin-top: 2px; border-bottom: 3px solid #3C9920;">
+					            {% for message in tags.list %}
+					                <p class="fg-white" style="height: 11px;">{{ message|capfirst }}</p>
+					            {% endfor %}
+					        </div>
+					    {% else %}
+						    {% if tags.grouper == 'warning' %}
+						        <div style="background-color: #FEB743;padding: 0px 1px 0px 12px; margin-top: 2px; border-bottom: 3px solid #D88931;">
+						            {% for message in tags.list %}
+						                <p class="fg-white" style="height: 11px;">{{ message|capfirst }}</p>
+						            {% endfor %}
+						        </div>
+						    {% endif %}
+					    {% endif %}					    
+				    {% endif %}				    
+			{% endif %}
+		    {% endfor %}
+		    </div>
+		{% endif %}
+		
+		
+	{%block body_container %} 
+  	{%endblock%} 
+    </div> <!-- End of container -->    
+    
+    
+    {%endblock%} 
+
+  
+  
+
+  	{%block footer %} 
+    <div class="text-center text-muted page-footer-content fixed-bottom">		
+		<small>&#169;{% now "Y" %} BuySell | v {{version}} | All rights reserved. <a href="#"  title="BuySell" class="text-muted" target="_blank"> BuySell</a>, Inc</small>
+    </div>
+    {%endblock%} 
+    
+  </body>
+</html>
+
+ 

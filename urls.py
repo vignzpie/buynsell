@@ -1,23 +1,11 @@
-from django.conf.urls import patterns, include, url 
+'''
+Created on Feb 14, 2018
+@author: bens
+'''
+from django.conf.urls import patterns,  url
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
-urlpatterns = patterns('',
-    url(r'^', include('buynsell.urls')),
-    # Examples:
-    # url(r'^$', 'txsq_v3.views.home', name='home'),
-    # url(r'^txsq_v3/', include('txsq_v3.foo.urls')),
-
+urlpatterns = patterns('main.views',
+     url(r'^$', 'login', name='login'),
+     url(r'^logout$','logout',name='logout_url'),
+     url(r'^home/', 'home', name='home'),
 )
-
-urlpatterns += patterns('',
-    url(r'^items', include('commodities.urls')),
-    # Examples:
-    # url(r'^$', 'txsq_v3.views.home', name='home'),
-    # url(r'^txsq_v3/', include('txsq_v3.foo.urls')),
-
-)
-
-
